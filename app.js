@@ -14,6 +14,8 @@ const app = express();
 const root = path.resolve(__dirname);
 app.set('port', process.env.PORT || 3000);
 
+const mpRoutes = require('./routes/mp');
+
 globalLog.initialize();
 globalLog.on('success', function(request, response) {
   console.log('SUCCESS');
@@ -67,6 +69,14 @@ app.use(passport.session());
 const apicache = require('apicache');
 const cache = apicache.middleware;
 
+app.get('/api/cache/index', function(req, res, next) {
+  res.send(apicache.getIndex());
+});
+
+app.get('/api/cache/clear', function(req, res, next) {
+  res.status(200).send(apicache.clear());
+});
+
 app.use('/auth', passport.authenticate('facebook', { scope: ['emails'] }));
 
 app.get('/auth/callback', passport.authenticate('facebook', { failureRedirect: '/login' }), (req, res) => {
@@ -78,20 +88,9 @@ app.use('/profile', (req, res) => {
   res.json(req.user);
 });
 
-app.use('/climberData', (req, res) => {
-  console.log('USER IN CLIMBERDATA ENDPOINT: ', req.user);
-  let key = process.env.MP_KEY;
+//mp api routes
+app.use('/api/mp', cache('1 week'), mpRoutes);
 
-  request.get({
-    url: `https://www.mountainproject.com/data/?action=getUser&email=kellenbusby@gmail.com&key=${key}`
-  }, (err, response, body) => {
-    if(err) {
-      res.status(500).send('Something went wrong contacting Mountain Project.');
-    }
-
-    res.status(200).send(JSON.parse(body));
-  });
-});
 app.use('/dist', express.static(path.join(__dirname, './dist')));
 app.use(fallback('index.html', { root }));
 
