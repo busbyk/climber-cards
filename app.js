@@ -15,18 +15,19 @@ const root = path.resolve(__dirname);
 app.set('port', process.env.PORT || 3000);
 
 const mpRoutes = require('./routes/mp');
+const msftRoutes = require('./routes/msft');
 
-globalLog.initialize();
-globalLog.on('success', function(request, response) {
-  console.log('SUCCESS');
-  console.log('Request', request);
-  console.log('Response', response);
-});
-globalLog.on('error', function(request, response) {
-  console.log('ERROR');
-  console.log('Request', request);
-  console.log('Response', response);
-});
+// globalLog.initialize();
+// globalLog.on('success', function(request, response) {
+//   console.log('SUCCESS');
+//   console.log('Request', request);
+//   console.log('Response', response);
+// });
+// globalLog.on('error', function(request, response) {
+//   console.log('ERROR');
+//   console.log('Request', request);
+//   console.log('Response', response);
+// });
 
 // MIDDLEWARE
 app.use(bodyParser.json());
@@ -90,6 +91,7 @@ app.use('/profile', (req, res) => {
 
 //mp api routes
 app.use('/api/mp', cache('1 week'), mpRoutes);
+app.use('/api/msft', msftRoutes);
 
 app.use('/dist', express.static(path.join(__dirname, './dist')));
 app.use(fallback('index.html', { root }));

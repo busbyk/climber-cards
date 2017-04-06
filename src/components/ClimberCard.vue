@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="background-photo"></div>
+    <div class="background-photo" v-bind:style="{ 'background-image': 'url(' + activeBackgroundImage + ')' }"></div>
     <div class="card-content-container">
       <div class="avatar-container">
         <img v-bind:src="user.avatar"/>
@@ -23,23 +23,53 @@
     data: function() {
       return {
         user: {},
-        cardBackgroundStyle: {}
+        backgroundImages: [],
+        activeBackgroundImage: ""
       }
     },
     created: function() {
-      this.getClimberData();
-      this.setCardBackgroundStyle();
+      this.getClimberData().then(() => {
+        this.getBackgroundImages();
+      }, err => {
+        console.log('could not get climber data so cannot get images');
+      });
     },
     methods: {
       getClimberData: function() {
-        this.$http.get('api/mp/climberData').then(response => {
-          this.user = response.body;
-        }, err => {
-          console.log('something went wrong getting user\'s data');
+        return new Promise((resolve, reject) => {
+          this.$http.get('api/mp/climberData').then(response => {
+            this.user = response.body;
+            resolve();
+          }, err => {
+            console.log('something went wrong getting user\'s data');
+            reject();
+          });
         });
       },
-      setCardBackgroundStyle: function() {
-        console.log('how to set the style...');
+      getBackgroundImages: function() {
+        let queryBase = 'api/msft/images/search',
+            query = '',
+            style = Object.keys(this.user.styles)[0];
+
+        query = queryBase + '?q=' + encodeURIComponent(style + ' climbing');
+        console.log(query);
+
+        this.$http.get(query).then(res => {
+          this.backgroundImages = res.body;
+          this.activeBackgroundImage = this.backgroundImages[0];
+
+          let counter = 0;
+          setInterval(() => {
+            this.activeBackgroundImage = this.backgroundImages[counter];
+            if(counter == 9) {
+              counter = 0;
+            } else {
+              counter++;
+            }
+          }, 5000);
+        }, err => {
+          console.log('something went wrong getting images');
+        });
       }
     }
   }
@@ -48,9 +78,9 @@
 <style>
   .card {
     position: relative;
-    -moz-box-shadow:    3px 3px 5px 6px #ccc;
-    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
-    box-shadow:         3px 3px 5px 6px #ccc;
+    -moz-box-shadow:    0px 1px 3px 2px #ccc;
+    -webkit-box-shadow: 0px 1px 3px 2px #ccc;
+    box-shadow:         0px 1px 3px 2px #ccc;
     border-radius: 15px;
   }
 
@@ -84,9 +114,9 @@
   }
 
   .style-buttons .style:hover {
-    -moz-box-shadow:    3px 3px 5px 6px #ccc;
-    -webkit-box-shadow: 3px 3px 5px 6px #ccc;
-    box-shadow:         3px 3px 5px 6px #ccc;
+    -moz-box-shadow:    0px 1px 3px 2px #ccc;
+    -webkit-box-shadow: 0px 1px 3px 2px #ccc;
+    box-shadow:         0px 1px 3px 2px #ccc;
   }
 
   .style-buttons .title {
@@ -101,5 +131,9 @@
     right: 0;
     height: 200px;
     border-radius: 15px 15px 0 0;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
   }
 </style>

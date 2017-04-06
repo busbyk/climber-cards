@@ -2,3 +2,4 @@
 node_modules
 ngrok
 dist
+npm-debug.log
