@@ -4,41 +4,41 @@
   "description": "An app to visualize a Mountain Project member's climbing profile. ",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js",
-    "start-dev": "webpack-dev-server",
+    "start": "webpack serve --mode development --env development",
     "test": "mocha",
     "build": "webpack --progress"
   },
   "author": "Kellen Busby",
   "license": "ISC",
   "dependencies": {
-    "apicache": "^0.8.4",
+    "apicache": "^1.5.3",
     "body-parser": "^1.17.1",
-    "dotenv": "^4.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.15.2",
     "express-history-api-fallback": "^2.1.0",
     "express-session": "^1.15.2",
     "global-request-logger": "^0.1.1",
     "morgan": "^1.8.1",
-    "passport": "^0.3.2",
-    "passport-facebook": "^2.1.1",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
     "path": "^0.12.7",
     "request": "^2.81.0",
     "vue": "^2.2.6",
     "vue-resource": "^1.2.1",
-    "vue-router": "^2.3.1"
+    "vue-router": "^3.4.9"
   },
   "devDependencies": {
-    "babel-core": "^6.24.0",
-    "babel-loader": "^6.4.1",
+    "@babel/core": "^7.12.9",
+    "babel-loader": "^8.2.2",
     "babel-preset-env": "^1.2.2",
-    "css-loader": "^0.27.3",
-    "mocha": "^3.2.0",
-    "vue-loader": "^11.3.3",
+    "css-loader": "^5.0.1",
+    "mocha": "^8.2.1",
+    "vue-loader": "^15.9.5",
     "vue-template-compiler": "^2.2.6",
-    "vuetify": "^0.9.4",
-    "webpack": "^2.3.2",
-    "webpack-dev-middleware": "^1.10.1",
-    "webpack-dev-server": "^2.4.2"
+    "vuetify": "^2.3.19",
+    "webpack": "^5.9.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-dev-middleware": "^4.0.2",
+    "webpack-dev-server": "^3.11.0"
   }
 }
